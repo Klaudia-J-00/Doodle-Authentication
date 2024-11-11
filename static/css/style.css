@@ -1,0 +1,80 @@
+* {
+font-family: "Doto", sans-serif;
+}
+
+.navbar {
+    background-color: #ff69b4;
+    color: white;
+    padding: 10px;
+    border-radius: 30px;
+    margin: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.navbar a {
+    color: white;
+    font-size: 25px;
+    text-decoration: none;
+    padding: 0 10px;
+}
+
+.navbar i {
+    margin-left: 2px;
+}
+
+.navbar-right {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.main {
+    background-color: #ff69b4;
+    color: white;
+    padding: 20px;
+    border-radius: 30px;
+    margin: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.header-row {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+p {
+    font-size: 18px;
+    margin: 20px;
+    margin-top: 0px;
+}
+
+.form-container {
+    display: flex;
+    flex-direction: column;
+    margin: 20px;
+    background-color: #ff69b4;
+    color: white;
+    border-radius: 30px;
+    padding: 20px;
+}
+
+#password, #password-conf, #login {
+    font-family: "Roboto", sans-serif;
+    background-color: white;
+    border: none;
+    border-radius: 30px;
+    padding: 10px;
+    margin: 10px;
+}
+
+button {
+    font-family: "Roboto", sans-serif;
+    background-color: white;
+    border: none;
+    border-radius: 30px;
+    padding: 10px;
+}
