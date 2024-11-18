@@ -50,9 +50,12 @@
             <div class="form-group">
                 <p>Rysuj swój doodle</p>
                 <br>
-                <canvas id="drawingCanvas" width="300" height="300" style="border: 1px solid black;"></canvas>
+                <canvas id="drawingCanvas" width="600" height="600" style="border: 1px solid black;"></canvas>
+                <br>
                 <button type="button" onclick="clearCanvas()">Wyczyść</button>
+                <button type="button" onclick="acceptDoodle()">Zaakceptuj obrazek</button>
             </div>
+            <hr>
             <input type="hidden" name="doodle" id="doodle">
             <button type="submit">Zarejestruj się</button>
         </form>
@@ -61,6 +64,10 @@
     <script>
         const canvas = document.getElementById('drawingCanvas');
         const ctx = canvas.getContext('2d');
+
+        ctx.fillStyle = 'white';  // Ustawiamy kolor wypełnienia na biały
+        ctx.fillRect(0, 0, canvas.width, canvas.height);  // Wypełniamy cały canvas białym kolorem
+
         let drawing = false;
 
         canvas.addEventListener('mousedown', startDrawing);
@@ -68,23 +75,77 @@
         canvas.addEventListener('mouseup', stopDrawing);
         canvas.addEventListener('mouseout', stopDrawing);
 
+        function saveCanvasToHiddenInput() {
+            const canvas = document.getElementById('drawingCanvas');
+            const doodleInput = document.getElementById('doodle');
+            doodleInput.value = canvas.toDataURL('image/png'); // Zapisujemy dane canvas w formacie base64
+        }
+
         function startDrawing(e) {
             drawing = true;
             draw(e);
         }
 
+        function acceptDoodle() {
+            const fileInput = document.getElementById('file');
+            const doodleData = canvas.toDataURL('image/png');
+
+            if (fileInput.files.length > 0) {
+                // Jeśli plik został przesłany
+                const file = fileInput.files[0];
+                const formData = new FormData();
+                formData.append('file', file);
+
+                fetch('/detect_file', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    const message = document.createElement('p');
+                    message.textContent = `Dodałeś obrazek klasy: ${data.class}. Zapamiętaj to, ponieważ przy logowaniu będziesz musiał użyć obrazka z tej samej kategorii.`;
+                    document.querySelector('.form-container').appendChild(message);
+                })
+                .catch(error => console.error('Error:', error));
+            } else {
+                // Jeśli rysunek z canvas został zaakceptowany
+                fetch('/detect_doodle', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ doodle: doodleData })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    const message = document.createElement('p');
+                    message.textContent = `Narysowałeś: ${data.class}. Zapamiętaj to, ponieważ przy logowaniu będziesz musiał narysować rysunek z tej samej kategorii.`;
+                    document.querySelector('.form-container').appendChild(message);
+                })
+                .catch(error => console.error('Error:', error));
+            }
+        }
+
         function draw(e) {
             if (!drawing) return;
+
+            // Uzyskujemy przesunięcie canvasu względem strony
+            const rect = canvas.getBoundingClientRect();
+
+            // Obliczamy współrzędne myszy względem canvasu
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
 
             ctx.lineWidth = 2;
             ctx.lineCap = 'round';
             ctx.strokeStyle = 'black';
 
-            ctx.lineTo(e.clientX - canvas.offsetLeft, e.clientY - canvas.offsetTop);
+            ctx.lineTo(x, y);
             ctx.stroke();
             ctx.beginPath();
-            ctx.moveTo(e.clientX - canvas.offsetLeft, e.clientY - canvas.offsetTop);
+            ctx.moveTo(x, y);
         }
+
 
         function stopDrawing() {
             drawing = false;
@@ -93,9 +154,12 @@
 
         function clearCanvas() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillRect(0, 0, canvas.width, canvas.height);  // Wypełniamy cały canvas białym kolorem
         }
 
         document.querySelector('form').onsubmit = function(event) {
+            saveCanvasToHiddenInput(); // Zapisz dane z canvas do ukrytego pola
+
             const doodle = document.getElementById('doodle').value;
             const fileInput = document.getElementById('file').files.length;
 
@@ -105,12 +169,8 @@
                 alert("Musisz dodać obrazek lub narysować doodle!");
                 return false; // Zatrzymuje wysyłanie formularza
             }
-
-            // Jeśli doodle został narysowany, zapisujemy jego dane w formularzu
-            if (doodle !== "") {
-                document.getElementById('doodle').value = doodle;
-            }
         };
+
     </script>
 </body>
 </html>
