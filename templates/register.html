@@ -65,8 +65,8 @@
         const canvas = document.getElementById('drawingCanvas');
         const ctx = canvas.getContext('2d');
 
-        ctx.fillStyle = 'white';  // Ustawiamy kolor wypełnienia na biały
-        ctx.fillRect(0, 0, canvas.width, canvas.height);  // Wypełniamy cały canvas białym kolorem
+        ctx.fillStyle = 'white';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
 
         let drawing = false;
 
@@ -78,7 +78,7 @@
         function saveCanvasToHiddenInput() {
             const canvas = document.getElementById('drawingCanvas');
             const doodleInput = document.getElementById('doodle');
-            doodleInput.value = canvas.toDataURL('image/png'); // Zapisujemy dane canvas w formacie base64
+            doodleInput.value = canvas.toDataURL('image/png');
         }
 
         function startDrawing(e) {
@@ -91,7 +91,6 @@
             const doodleData = canvas.toDataURL('image/png');
 
             if (fileInput.files.length > 0) {
-                // Jeśli plik został przesłany
                 const file = fileInput.files[0];
                 const formData = new FormData();
                 formData.append('file', file);
@@ -108,7 +107,6 @@
                 })
                 .catch(error => console.error('Error:', error));
             } else {
-                // Jeśli rysunek z canvas został zaakceptowany
                 fetch('/detect_doodle', {
                     method: 'POST',
                     headers: {
@@ -129,10 +127,8 @@
         function draw(e) {
             if (!drawing) return;
 
-            // Uzyskujemy przesunięcie canvasu względem strony
             const rect = canvas.getBoundingClientRect();
 
-            // Obliczamy współrzędne myszy względem canvasu
             const x = e.clientX - rect.left;
             const y = e.clientY - rect.top;
 
@@ -154,20 +150,19 @@
 
         function clearCanvas() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.fillRect(0, 0, canvas.width, canvas.height);  // Wypełniamy cały canvas białym kolorem
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
         }
 
         document.querySelector('form').onsubmit = function(event) {
-            saveCanvasToHiddenInput(); // Zapisz dane z canvas do ukrytego pola
+            saveCanvasToHiddenInput();
 
             const doodle = document.getElementById('doodle').value;
             const fileInput = document.getElementById('file').files.length;
 
-            // Jeśli użytkownik nie podał obrazka ani nie narysował doodla
             if (fileInput === 0 && doodle === "") {
-                event.preventDefault(); // Zapobiega wysłaniu formularza
+                event.preventDefault();
                 alert("Musisz dodać obrazek lub narysować doodle!");
-                return false; // Zatrzymuje wysyłanie formularza
+                return false;
             }
         };
 

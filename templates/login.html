@@ -30,6 +30,13 @@
     {% else %}
         <div class="form-container">
             <h2>Logowanie</h2>
+            {% with messages = get_flashed_messages() %}
+               {% if messages %}
+                  {% for message in messages %}
+                     {{ message }}
+                  {% endfor %}
+               {% endif %}
+            {% endwith %}
             <form action="{{ url_for('login') }}" method="POST" enctype="multipart/form-data">
                 <div class="form-group">
                     <label for="login">Login</label>
@@ -63,9 +70,8 @@
     <script>
         const canvas = document.getElementById('drawingCanvas');
         const ctx = canvas.getContext('2d');
-        ctx.fillStyle = 'white';  // Ustawiamy kolor wypełnienia na biały
-        ctx.fillRect(0, 0, canvas.width, canvas.height);  // Wypełniamy cały canvas białym kolorem
-
+        ctx.fillStyle = 'white';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
         let drawing = false;
 
         canvas.addEventListener('mousedown', startDrawing);
@@ -93,7 +99,6 @@
             .then(response => response.json())
             .then(data => {
                 if (data.class) {
-                    // Wyświetlanie wykrytej klasy w elemencie
                     document.getElementById('doodleClassResult').innerText = 'Wykryta klasa: ' + data.class;
                 } else {
                     document.getElementById('doodleClassResult').innerText = 'Błąd w detekcji';
@@ -108,16 +113,14 @@
         function saveCanvasToHiddenInput() {
             const canvas = document.getElementById('drawingCanvas');
             const doodleInput = document.getElementById('doodle');
-            doodleInput.value = canvas.toDataURL('image/png'); // Zapisujemy dane canvas w formacie base64
+            doodleInput.value = canvas.toDataURL('image/png');
         }
 
         function draw(e) {
             if (!drawing) return;
 
-            // Uzyskujemy przesunięcie canvasu względem strony
             const rect = canvas.getBoundingClientRect();
 
-            // Obliczamy współrzędne myszy względem canvasu
             const x = e.clientX - rect.left;
             const y = e.clientY - rect.top;
 

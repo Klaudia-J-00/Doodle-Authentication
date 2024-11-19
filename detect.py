@@ -17,14 +17,11 @@ class Detect:
         self.labels_file = labels_file
         self.model_path = model_path
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu") if device is None else device
-        print(f"Using device: {self.device}")
 
-        # Load class-to-index mapping
         self.idx_to_class = self._load_labels()
         self.num_classes = len(self.idx_to_class)
-        print(f"Loaded {self.num_classes} classes from {labels_file}.")
+        # print(f"Loaded {self.num_classes} classes from {labels_file}.")
 
-        # Initialize model
         self.model = self._initialize_model()
         self.data_transforms = transforms.Compose([
             transforms.Resize((224, 224)),
@@ -51,7 +48,7 @@ class Detect:
         """
         model = models.mobilenet_v2(pretrained=False)
         model.classifier[1] = torch.nn.Linear(model.classifier[1].in_features, self.num_classes)
-        model.load_state_dict(torch.load(self.model_path, map_location=self.device))
+        model.load_state_dict(torch.load(self.model_path, map_location=self.device, weights_only=True))
         model = model.to(self.device)
         model.eval()
         return model
@@ -61,14 +58,14 @@ class Detect:
         Load and preprocess the image.
         """
         image = Image.open(image_path).convert("RGB")
-        return self.data_transforms(image).unsqueeze(0)  # Add batch dimension
+        return self.data_transforms(image).unsqueeze(0)
 
     def detect_class(self, image_path):
         """
         Predict the class of the given image.
 
         Args:
-            image_path (str): Path to the test image.
+            image_path (str): Path to the image that we are detecting class of.
 
         Returns:
             str: Predicted class name.
@@ -84,7 +81,7 @@ class Detect:
         return predicted_class
 
 
-# Example usage
+#### Example usage
 # labels_file = "labels/labels.txt"  # Path to labels file
 # model_path = "model/mobilenet_doodle_model.pth"
 # test_image_path1 = "test_images/1.png"
@@ -96,7 +93,6 @@ class Detect:
 #
 # detector = Detect(labels_file=labels_file, model_path=model_path)
 #
-# # Predict the class of the test image
 # try:
 #     for f in test_images:
 #         predicted_class = detector.detect_class(f)

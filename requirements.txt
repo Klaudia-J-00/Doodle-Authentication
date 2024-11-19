@@ -1,0 +1,8 @@
+torch~=2.5.1+cu124
+seaborn~=0.13.2
+matplotlib~=3.9.2
+torchvision~=0.20.1+cu124
+pillow~=10.2.0
+tqdm~=4.67.0
+Flask~=3.0.3
+Werkzeug~=3.1.3
