@@ -3,7 +3,7 @@ This application is a doodle-based authentication system where users can registe
 roviding a username, password, and a doodle (either drawn or uploaded). The application uses a trained MobileNet model to classify doodles for user authentication.
 
 --------
-### Author: Klaudia Jędryszczak
+#### Author: Klaudia Jędryszczak
 
 --------
 ## Features 
