@@ -1,6 +1,6 @@
 # Doodle-Authentication
-This application is a doodle-based authentication system where users can register and log in by p
-roviding a username, password, and a doodle (either drawn or uploaded). The application uses a trained MobileNet model to classify doodles for user authentication.
+This application is a doodle-based authentication system where users can register and log in by 
+providing a username, password, and a doodle (either drawn or uploaded). The application uses a trained MobileNet model to classify doodles for user authentication.
 
 --------
 #### Author: Klaudia Jędryszczak
