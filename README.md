@@ -110,33 +110,33 @@ The MobileNet model used for doodle classification was trained using the
 The dataset was limited to 71 classes, and each class contained 3000 samples. 
 
 1. Dataset and DataLoader
-- A `DoodleDataset` class was created to load the doodle images and labels from the dataset directory 
-- Images were transformed using `torchvision.transforms` to resize and normalize the images
-- The dataset was split into traing (70%), validation (15%), and test (15%) sets using `torch.utils.data.random_split`
-- DataLoaders were created for each set using `torch.utils.data.DataLoader`
-- The DataLoader used batch size of 128 and shuffled the training data
+   - A `DoodleDataset` class was created to load the doodle images and labels from the dataset directory 
+   - Images were transformed using `torchvision.transforms` to resize and normalize the images
+   - The dataset was split into traing (70%), validation (15%), and test (15%) sets using `torch.utils.data.random_split`
+   - DataLoaders were created for each set using `torch.utils.data.DataLoader`
+   - The DataLoader used batch size of 128 and shuffled the training data
 
 2. Model Preparation 
-- MobileNetV2 (a lightweight convolutional neural network) was loaded with pretrained weights from `torchvision.models`
-- The classifier layer was replaced with a new linear layer with 71 output features
+   - MobileNetV2 (a lightweight convolutional neural network) was loaded with pretrained weights from `torchvision.models`
+   - The classifier layer was replaced with a new linear layer with 71 output features
 
 3. Training Loop
-- The model was trained for 10 epochs using the Adam optimizer and CrossEntropyLoss function. 
-- The training loop included: 
-  - Zeroing the gradients
-  - Forward propagation
-  - Backward propagation
-  - Updating weights
-  - Using the optimizer 
-  - Calculating the loss and accuracy
+   - The model was trained for 10 epochs using the Adam optimizer and CrossEntropyLoss function. 
+   - The training loop included: 
+     - Zeroing the gradients
+     - Forward propagation
+     - Backward propagation
+     - Updating weights
+     - Using the optimizer 
+     - Calculating the loss and accuracy
 
 4. Saving the Model
-- The trained model was saved to a file using `torch.save` 
-- The model was saved as `mobilenet_doodle_model.pth` 
+   - The trained model was saved to a file using `torch.save` 
+   - The model was saved as `mobilenet_doodle_model.pth` 
 
 5. Model Evaluation
-- The model was evaluated on the test set to calculate the accuracy of the model
-- Predictions and ground truth labels were collected to compute the confusion matrix and classification report
+   - The model was evaluated on the test set to calculate the accuracy of the model
+   - Predictions and ground truth labels were collected to compute the confusion matrix and classification report
 
 Final accuracy of the model was 91.2% on the test set. 
 You can find the training script in `model/model.py`. 
